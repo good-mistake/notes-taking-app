@@ -25,7 +25,9 @@
     "react-dom": "19.1.0",
     "react-redux": "^9.2.0",
     "redux-persist": "^6.0.0",
-    "sass": "^1.90.0"
+    "sass": "^1.90.0",
+    "next-auth": "^4.24.11",
+    "nodemailer": "^6.10.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
