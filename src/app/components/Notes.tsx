@@ -225,14 +225,22 @@ const Notes = () => {
     dispatch(setView("search"));
   };
   const handleGoBackTag = () => {
-    dispatch(setView("tags"));
+    dispatch(setView("home"));
     dispatch(clearSelection());
     dispatch(setFilter("all"));
     dispatch(setSearchQuery(""));
   };
+  const showListsTablet = isTablet && (view === "home" || view === "archive");
+  const showListsDesktop = !isTablet && view !== "search";
+  const showNoteInfoDesktop = !isTablet && view !== "search";
+  const showSearchTablet = isTablet && view === "search";
+  const showTagsTablet = isTablet && view === "tags";
+  const showNoteDetailTablet =
+    isTablet && view === "noteDetail" && (selectedNote || draftNote);
+
   return (
     <div className="notesContainer">
-      {view !== "search" && view !== "noteDetail" && view !== "tags" && (
+      {(showListsTablet || showListsDesktop) && (
         <section className="noteLists">
           {!isTablet ? (
             <button
@@ -292,7 +300,7 @@ const Notes = () => {
                   <div>
                     <span> Notes Tagged:</span>{" "}
                     {typeof filter === "object" ? filter.tag : ""}
-                  </div>
+                  </div>{" "}
                 </div>
               )}
             </motion.h1>
@@ -365,10 +373,32 @@ const Notes = () => {
                   </motion.li>
                 ))}
             </AnimatePresence>
-          </motion.ul>
+          </motion.ul>{" "}
+          {isTablet && (
+            <button
+              aria-label="create"
+              className="createNoteTablet"
+              onClick={handleCreate}
+              disabled={creating}
+            >
+              {creating ? (
+                <motion.div
+                  className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full dark:border-gray-600"
+                  animate={{ rotate: 360 }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 0.8,
+                    ease: "linear",
+                  }}
+                />
+              ) : (
+                <img src={"/assets/images/icon-plus.svg"} alt="add" />
+              )}
+            </button>
+          )}
         </section>
       )}
-      {view !== "search" && view !== "noteDetail" && !isTablet && (
+      {(showNoteInfoDesktop || showNoteDetailTablet) && (
         <section className="noteInfo">
           <AnimatePresence mode="wait">
             {draftNote ? (
@@ -635,7 +665,7 @@ const Notes = () => {
           </section>
         </div>
       )}
-      {isTablet && view === "search" && (
+      {showSearchTablet && (
         <Search
           onSelect={(note) => {
             dispatch(setSelectedNote(note._id));
@@ -644,7 +674,7 @@ const Notes = () => {
           }}
         />
       )}
-      {isTablet && view === "noteDetail" && selectedNote && (
+      {showNoteDetailTablet && selectedNote && (
         <section className="noteInfo tablet">
           <motion.div
             key={selectedNote._id}
@@ -770,7 +800,7 @@ const Notes = () => {
           </AnimatePresence>
         </section>
       )}
-      {isTablet && view === "tags" && <Nav />}
+      {showTagsTablet && <Nav />}
       {isTablet && <Footer />}
     </div>
   );

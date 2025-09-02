@@ -685,10 +685,12 @@ body {
           border-right: 1px solid var(--color-border-2);
           transition: all 0.2s ease;
           min-height: 100vh;
+          position: relative;
           @media (max-width: 1024px) {
             border: none;
             width: 100%;
             padding: 24px 32px;
+            position: relative;
             h1 {
               font-size: 24px;
               letter-spacing: -0.5px;
@@ -720,6 +722,22 @@ body {
                     filter: var(--icon-filter2);
                   }
                 }
+              }
+            }
+            .createNoteTablet {
+              margin-left: auto;
+              margin-top: 2rem;
+              width: 64px;
+              height: 64px;
+              background-color: #335cff;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              img {
+                filter: brightness(0) invert(1);
+                width: 32px;
+                height: 32px;
               }
             }
           }
