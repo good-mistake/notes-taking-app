@@ -1,6 +1,7 @@
 export async function sendResetLink(to: string, userId: string) {
   const nodemailer = await import("nodemailer");
   const jwt = await import("jsonwebtoken");
+
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT || 587),
