@@ -1,4 +1,3 @@
-// pages/api/signup.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import connectDb from "../../app/utils/connectDb";
 import bcrypt from "bcrypt";

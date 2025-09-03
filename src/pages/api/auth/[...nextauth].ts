@@ -1,11 +1,8 @@
-import NextAuth, {
-  NextAuthOptions,
-  Session,
-  User as NextAuthUser,
-} from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import connectDb from "@/app/utils/connectDb";
 import User from "@/app/models/User";
+
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
@@ -14,33 +11,40 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user }: { user: NextAuthUser }) {
-      await connectDb();
+    async signIn({ user }) {
+      try {
+        if (!user?.email) return false;
 
-      let existing = await User.findOne({ email: user.email });
+        await connectDb();
 
-      if (!existing) {
-        const dummyUser = await User.findOne({ email: "dummy@notes.com" });
+        let existing = await User.findOne({ email: user.email });
+        if (!existing) {
+          const dummyUser = await User.findOne({ email: "dummy@notes.com" });
+          const dummyNotes =
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            dummyUser?.notes.filter((n: any) => n.isDummy) || [];
+
+          existing = await User.create({
+            email: user.email,
+            password: "google-oauth",
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            notes: dummyNotes.map((n: any) => ({
+              ...n.toObject(),
+              _id: undefined,
+              isDummy: false,
+            })),
+          });
+        }
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const dummyNotes = dummyUser?.notes.filter((n: any) => n.isDummy) || [];
-
-        existing = await User.create({
-          email: user.email,
-          password: "google-oauth",
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          notes: dummyNotes.map((n: any) => ({
-            ...n.toObject(),
-            _id: undefined,
-            isDummy: false,
-          })),
-        });
+        (user as any).id = existing._id;
+        return true;
+      } catch (e) {
+        console.error("signIn error:", e);
+        return false;
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (user as any).id = existing._id;
-      return true;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async jwt({ token, user }: { token: any; user?: NextAuthUser }) {
+    async jwt({ token, user }) {
       if (user) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (token as any).id = (user as any).id;
@@ -48,8 +52,7 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async session({ session, token }: { session: Session; token: any }) {
+    async session({ session, token }) {
       if (token) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (session.user as any).id = (token as any).id as string;
@@ -58,6 +61,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 export default NextAuth(authOptions);
