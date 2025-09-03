@@ -689,7 +689,7 @@ const Notes = () => {
           }}
         />
       )}
-      {showNoteDetailTablet && (
+      {showNoteDetailTablet && selectedNote && (
         <section className="noteInfo tablet">
           <motion.div
             key={selectedNote._id}
