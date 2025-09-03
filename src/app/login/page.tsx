@@ -101,7 +101,9 @@ const Page = () => {
             <div className="signUpPass">
               <div className="forgotAndPass">
                 <p>Password</p>
-                <p className="forgot">Forgot</p>
+                <p className="forgot" onClick={() => router.push("/forgot")}>
+                  Forgot
+                </p>
               </div>
               <div className="inputImg">
                 <motion.input
