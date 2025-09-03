@@ -99,7 +99,10 @@ const Page = () => {
 
           <label htmlFor="password">
             <div className="signUpPass">
-              <p>Password</p>
+              <div className="forgotAndPass">
+                <p>Password</p>
+                <p className="forgot">Forgot</p>
+              </div>
               <div className="inputImg">
                 <motion.input
                   id="password"
