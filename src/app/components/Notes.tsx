@@ -413,7 +413,7 @@ const Notes = () => {
           )}
         </section>
       )}
-      {(showNoteInfoDesktop || showNoteDetailTablet) && (
+      {showNoteInfoDesktop && (
         <section className="noteInfo">
           <AnimatePresence mode="wait">
             {draftNote ? (
@@ -635,7 +635,7 @@ const Notes = () => {
           </section>
         </div>
       )}
-      {selectedNote && archiveModal && (
+      {showNoteDetailTablet && (
         <div className="modalOverlay">
           <section ref={archiveRef} className="archiveModal">
             <div>
