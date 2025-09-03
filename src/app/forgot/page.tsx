@@ -83,6 +83,7 @@ const Page = () => {
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -5 }}
+                className="error"
               >
                 {clientError ?? msg}
               </motion.p>
