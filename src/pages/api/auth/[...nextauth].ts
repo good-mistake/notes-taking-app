@@ -3,7 +3,6 @@ import NextAuth, {
   Session,
   User as NextAuthUser,
 } from "next-auth";
-
 import GoogleProvider from "next-auth/providers/google";
 import connectDb from "@/app/utils/connectDb";
 import User from "@/app/models/User";
@@ -60,6 +59,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 export default NextAuth(authOptions);
