@@ -635,7 +635,7 @@ const Notes = () => {
           </section>
         </div>
       )}
-      {showNoteDetailTablet && (
+      {selectedNote && archiveModal && (
         <div className="modalOverlay">
           <section ref={archiveRef} className="archiveModal">
             <div>
@@ -689,7 +689,7 @@ const Notes = () => {
           }}
         />
       )}
-      {showNoteDetailTablet && selectedNote && (
+      {showNoteDetailTablet && (
         <section className="noteInfo tablet">
           <motion.div
             key={selectedNote._id}
