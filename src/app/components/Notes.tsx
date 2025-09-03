@@ -128,9 +128,11 @@ const Notes = () => {
   const handleSave = async () => {
     setClientError(null);
     if (!draftNote) return;
+
     const title = (draftNote.title || "").trim();
     const content = (draftNote.content || "").trim();
     const tags = draftNote.tags.map((t) => t.trim()).filter(Boolean);
+
     if (!title || title === "Untitled Note") {
       setClientError("Title cannot be empty");
       return;
@@ -143,6 +145,7 @@ const Notes = () => {
       setClientError("You must add at least one tag");
       return;
     }
+
     setSaving(true);
     const updated: NoteTypes = {
       ...draftNote,
@@ -151,6 +154,7 @@ const Notes = () => {
       tags,
       lastEdited: new Date().toISOString(),
     };
+
     try {
       if (token) {
         const created = await dispatch(
@@ -162,15 +166,21 @@ const Notes = () => {
         dispatch(setSelectedNote(updated._id));
       }
       setDraftNote(null);
+
+      if (isTablet) {
+        dispatch(setView("home"));
+      }
     } catch (err) {
       setClientError(typeof err === "string" ? err : "Failed to save note");
     } finally {
       setSaving(false);
     }
   };
+
   const handleCancel = async () => {
     if (!draftNote) return;
     const isPersisted = notes.some((n) => n._id === draftNote._id);
+
     if (isPersisted) {
       if (!token) dispatch(deleteGuestNote(draftNote._id));
       else {
@@ -182,9 +192,14 @@ const Notes = () => {
         }
       }
     }
+
     setDraftNote(null);
     dispatch(setSelectedNote(null));
     setClientError(null);
+
+    if (isTablet) {
+      dispatch(setView("home"));
+    }
   };
 
   const confirmArchive = async () => {
